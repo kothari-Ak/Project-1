@@ -1,30 +1,31 @@
 const authorModel = require('../Models/authorModel');
 const validator = require('email-validator');
 const jwt = require("jsonwebtoken");
-const { title } = require('process');
  
-
-// =======================[Create]======================================
+// =======================[Validations]======================================
  const isValid = function (value) {
   
   if( typeof value == 'string' && value.trim().length == 0 ) {
-    console.log("2") 
+    // console.log("2") 
       return false
   }
   if ( typeof value == 'string' && value.length !== value.trim().length ) {
-    console.log("4")
+    // console.log("4")
       return false
   }
   if ( typeof value == 'number' ) {
-    console.log("5")
+    // console.log("5")
       return false
   }
   return true
 }
+// =======================[ Title Validation]======================================
   const isValidTitle = function(title){
     return ['Mr','Mrs','Miss'].indexOf(title) !== -1
    }
         
+// =======================[Create Authors]======================================
+
 const createAuthor = async function (req, res) {
   try { 
     let data = req.body 
