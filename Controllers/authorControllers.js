@@ -27,7 +27,7 @@ const jwt = require("jsonwebtoken");
 // =======================[Create Authors]======================================
 
 const createAuthor = async function (req, res) {
-  try { 
+  try {   
     let data = req.body 
    const { fname, lname, title, email, password } = data;
    

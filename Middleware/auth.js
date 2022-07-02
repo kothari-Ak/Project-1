@@ -27,7 +27,7 @@ module.exports.Authentication = Authentication
 const Authorisation = async function (req, res, next) { 
     try {
         let token = req.headers["x-api-key"]
-        console.log("hii")
+        // console.log("hii")
         if (!token) return res.status(400).send({ status: false, msg: "token must be present " })
         let decodedToken = jwt.verify(token, "aishwarya-anugya-anjali-kimmi")
         
