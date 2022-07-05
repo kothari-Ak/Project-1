@@ -4,9 +4,13 @@ const jwt = require("jsonwebtoken");
  
 // =======================[Validations]======================================
  const isValid = function (value) {
+  if( typeof value ==='undefined' || value === null ) {
+  console.log("1")
+    return false
+  }
   
   if( typeof value == 'string' && value.trim().length == 0 ) {
-    // console.log("2") 
+    console.log("2") 
       return false
   }
   if ( typeof value == 'string' && value.length !== value.trim().length ) {
@@ -27,20 +31,24 @@ const jwt = require("jsonwebtoken");
 // =======================[Create Authors]======================================
 
 const createAuthor = async function (req, res) {
-  try {   
+  try {    
     let data = req.body 
    const { fname, lname, title, email, password } = data;
-   
-        if ( !isValid ( fname ) ){res.status(400).send({status:false, msg:"Enter valid First Name."})} 
-        if ( !isValid ( lname ) ) {res.status(400).send({status:false, msg:"Enter valid Last Name."})}
-        if ( !isValid ( title ) ) {res.status(400).send({status:false, msg:"Enter valid Title."})}
-        if ( !isValidTitle ( title ) ) {res.status(400).send({status:false, msg: "Title should be among Mr, Mrs and Miss"})}
-        if ( !isValid ( email ) ) {res.status(400).send({status:false, msg:"Enter valid Email."})}
-        if ( !isValid ( password ) ){res.status(400).send({status:false, msg:"Enter valid Password."})}
-        
-        if (Object.keys(data).length == 0) {
-          return res.status(400).send({ status: false, msg: "Body should  be not Empty.. " })
-      } 
+
+   if (Object.keys(data).length == 0) {
+    return res.status(400).send({ status: false, msg: "Body should  be not Empty.. " })
+  } 
+   let inValid = ' '
+   if ( !isValid ( fname ) ) inValid = inValid + "fname "
+   if ( !isValid ( lname ) ) inValid = inValid + 'lname '
+   if ( !isValid ( title ) ) inValid = inValid + "title "
+   if ( !isValid ( email ) ) inValid = inValid + "email "
+   if ( !isValid ( password ) ) inValid = inValid + "password "
+   if ( !isValid(fname) || !isValid(lname) ||!isValid(title) || !isValid(email) || !isValid(password) ) {
+     return res.status(400).send({ status: false, msg: `Enter the following field(s): ${inValid}` })
+    }
+    if ( !isValidTitle(title)) 
+    return res.status(400).send({status:false, msg :"Title can attain the value either 'Mr' ,'Mrs' or 'Miss'"})
         
         const validEmail = validator.validate(email)
         if (validEmail == false) {
@@ -49,12 +57,12 @@ const createAuthor = async function (req, res) {
       let validemail = await authorModel.find({ email: email })
       if (validemail.length == 0) {
         let savedData = await authorModel.create(data)
-        res.status(201).send({ msg: savedData })
+        res.status(201).send({status:true, data: savedData })
       }
-      else { res.status(400).send({ msg: "Email is already in use" }) }
+      else { res.status(400).send({status:false, msg: "Email is already in use" }) }
   }
 catch (err) {
-  res.status(500).send({ status: false, error: err.message })
+  res.status(500).send({ status: false, status: false, error: err.message })
 }  
 } 
  
@@ -63,21 +71,21 @@ module.exports.createAuthor = createAuthor
 // ===========================[Login]========================================
 
 const loginAuthor = async function (req, res) {
-  try {
+  try { 
     let emailId = req.body.email;
     let password = req.body.password;
 
     let author = await authorModel.findOne({ email: emailId, password: password });
     if (!author)
       return res.status(400).send({
-        status: false, msg: "email or password is not correct",
+        status: false, msg: "email or password is not correct"
       });
  
     let token = jwt.sign(
       {
         authorId: author._id.toString(),
         batch: "radon",
-        organisation: "FunctionUp",
+        organisation: "FunctionUp"
       },
       "aishwarya-anugya-anjali-kimmi" 
     );
@@ -86,7 +94,7 @@ const loginAuthor = async function (req, res) {
 
   }
   catch (err) {
-    res.status(500).send({ msg: "Error", error: err.message })
+    res.status(500).send({ status: false, msg: "Error", error: err.message })
   }
 }
 
