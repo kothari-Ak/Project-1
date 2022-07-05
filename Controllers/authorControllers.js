@@ -81,7 +81,7 @@ const loginAuthor = async function (req, res) {
       },
       "aishwarya-anugya-anjali-kimmi" 
     );
-    // res.setHeader("x-api-key", token);
+    res.setHeader("x-api-key", token);
     res.status(200).send({ status: true, token: token });
 
   }

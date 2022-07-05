@@ -5,7 +5,7 @@ const BlogModel = require("../Models/blogModel")
 const isValid = function (value) {
 
     if( typeof value == 'string' && value.trim().length == 0 ) {
-    //   console.log("2")
+      console.log("2")
         return false
     }
     if ( typeof value == 'string' && value.length !== value.trim().length ) {
