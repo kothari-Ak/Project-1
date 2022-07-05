@@ -5,20 +5,20 @@ const jwt = require("jsonwebtoken");
 // =======================[Validations]======================================
  const isValid = function (value) {
   if( typeof value ==='undefined' || value === null ) {
-  console.log("1")
+  // console.log("1")
     return false
   }
   
   if( typeof value == 'string' && value.trim().length == 0 ) {
-    console.log("2") 
+    // console.log("2") 
       return false
   }
   if ( typeof value == 'string' && value.length !== value.trim().length ) {
-    // console.log("4")
+    // console.log("3")
       return false
   }
   if ( typeof value == 'number' ) {
-    // console.log("5")
+    // console.log("4")
       return false
   }
   return true
