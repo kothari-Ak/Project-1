@@ -7,7 +7,6 @@ const commnMid = require("../Middleware/auth")
 
 // ==================[ Authors Api's ]==================================
 router.post("/authors", AuthorController.createAuthor)
-
 router.post("/login", AuthorController.loginAuthor)
 
 // ==================[ Blogs Api's ]==================================
@@ -17,6 +16,5 @@ router.get('/blogs', commnMid.Authentication, BlogController.getAllBlogs)
 router.put("/blogs/:blogId", commnMid.Authentication, commnMid.Authorisation, BlogController.updateBlog)
 router.delete("/blogs/:blogId", commnMid.Authentication, commnMid.Authorisation, BlogController.deleteblog)
 router.delete("/blogs", commnMid.Authentication, commnMid.deleteByQuery, BlogController.deleteblogByQuery)
-
 
 module.exports = router;
