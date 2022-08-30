@@ -4,25 +4,21 @@ const jwt = require("jsonwebtoken");
 
 // =======================[Validations]======================================
 const isValid = function (value) {
-  if (typeof value === 'undefined' || value === null) {
-    // console.log("1")
+  if (typeof (value) == "undefined" || typeof (value) == null) {
     return false
   }
 
-  if (typeof value == 'string' && value.trim().length == 0) {
-    // console.log("2")  
+  if (typeof (value) == "string" && (value).trim().length == 0) {
     return false
   }
-  if (typeof value == 'string' && value.length !== value.trim().length) {
-    // console.log("3")
+
+  if (typeof (value) === 'number') {
     return false
   }
-  if (typeof value == 'number') {
-    // console.log("4")
-    return false
-  }
+
   return true
 }
+
 // =======================[ Title Validation]======================================
 const isValidTitle = function (title) {
   return ['Mr', 'Mrs', 'Miss'].indexOf(title) !== -1
@@ -36,7 +32,7 @@ const createAuthor = async function (req, res) {
     const { fname, lname, title, email, password } = data;
 
     if (Object.keys(data).length == 0) {
-      return res.status(400).send({ status: false, message: "Body should  be not Empty" })
+      return res.status(400).send({ status: false, message: "You must enter data." })
     }
     let inValid = ' '
     if (!isValid(fname)) inValid = inValid + "fname "
@@ -52,14 +48,14 @@ const createAuthor = async function (req, res) {
 
     const validEmail = validator.validate(email)
     if (validEmail == false) {
-      return res.status(400).send({ status: false, message: "Email is not valid" })
+      return res.status(400).send({ status: false, message: "Enter a valid email ." })
     }
     let validemail = await authorModel.find({ email: email })
     if (validemail.length == 0) {
       let savedData = await authorModel.create(data)
       res.status(201).send({ status: true, data: savedData })
     }
-    else { res.status(400).send({ status: false, message: "This Email is already in use" }) }
+    else { res.status(400).send({ status: false, message: "This Email is already in use ." }) }
   }
   catch (err) {
     res.status(500).send({ status: false, error: err.message })
@@ -75,10 +71,14 @@ const loginAuthor = async function (req, res) {
     let emailId = req.body.email;
     let password = req.body.password;
 
+    if (Object.keys(req.body).length == 0) {
+      return res.status(400).send({ status: false, message: "Must enter email and password ." })
+    }
+
     let author = await authorModel.findOne({ email: emailId, password: password });
     if (!author) {
-      return res.status(400).send({
-      status: false, message: "email or password is not correct"
+      return res.status(401).send({
+        status: false, message: "email or the password is incorrect ."
       })
     }
 
@@ -88,10 +88,10 @@ const loginAuthor = async function (req, res) {
         batch: "radon",
         organisation: "FunctionUp"
       },
-      "aishwarya-anugya-anjali-kimmi"
+      "aishwarya-sejgaya"
     );
     res.setHeader("x-api-key", token);
-    res.status(200).send({ status: true, token: token });
+    res.status(200).send({ status: true, data: token });
 
   }
   catch (err) {

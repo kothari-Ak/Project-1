@@ -3,25 +3,21 @@ const BlogModel = require("../Models/blogModel")
 
 // ========================[Validations]==================================
 const isValid = function (value) {
-    if (typeof value === 'undefined' || value === null) {
-        // console.log("1")
+    if (typeof (value) == "undefined" || typeof (value) == null) {
         return false
     }
 
-    if (typeof value == 'string' && value.trim().length == 0) {
-        //   console.log("2")
+    if (typeof (value) == "string" && (value).trim().length == 0) {
         return false
     }
-    if (typeof value == 'string' && value.length !== value.trim().length) {
-        //   console.log("3")
+
+    if (typeof (value) === 'number') {
         return false
     }
-    if (typeof value == 'number') {
-        // console.log("4")
-        return false
-    }
+
     return true
 }
+
 // ========================[CreateBlog]==================================
 
 const createBlog = async function (req, res) {
@@ -31,7 +27,7 @@ const createBlog = async function (req, res) {
         const { title, body, authorId, tags, category, subCategory } = data;
 
         if (Object.keys(data).length == 0) {
-            return res.status(400).send({ status: false, message: "Body should be not Empty" })
+            return res.status(400).send({ status: false, message: "You must enter data." })
         }
 
         let inValid = ' '
@@ -48,7 +44,7 @@ const createBlog = async function (req, res) {
         let AuthorId = data.authorId
 
         let FindId = await authorModel.findById(AuthorId)
-        if (!FindId) return res.status(400).send({ status: false, message: 'AuthorId does not exist' })
+        if (!FindId) return res.status(400).send({ status: false, message: "Author Id doesn't present in our DataBase." })
 
         let blogCreated = await BlogModel.create(data)
         res.status(201).send({ status: true, data: blogCreated })
@@ -85,7 +81,7 @@ const updateBlog = async function (req, res) {
         let blogId = req.params.blogId;
 
         if (Object.keys(data).length == 0) {
-            return res.status(400).send({ status: false, message: "Body should not be Empty" })
+            return res.status(400).send({ status: false, message: "You must enter data." })
         }
 
         let blog = await BlogModel.findOneAndUpdate({ _id: blogId, isDeleted: false },
@@ -109,7 +105,7 @@ const deleteblog = async function (req, res) {
         let blog = await BlogModel.findById({ _id: blogId, isDeleted: false, deletedAt: null });
 
         if (!blog) {
-            return res.status(404).send({ status: false, message: "No such blog exists" });
+            return res.status(404).send({ status: false, message: "No blog is found" });
         }
         if (blog.isDeleted == true) {
             return res.status(400).send({ status: false, message: "Already Deleted" })
@@ -139,7 +135,7 @@ const deleteblogByQuery = async function (req, res) {
 
         let findBlogs = await BlogModel.find(mandatory)
         if (findBlogs.length === 0)
-            return res.status(400).send({ status: false, message: "No such blog found to delete" })
+            return res.status(400).send({ status: false, message: "No such blog found to delete." })
 
         let deleted = await BlogModel.updateMany(mandatory, { isDeleted: true, deletedAt: new Date() }, { new: true })
         return res.status(200).send({ status: true, data: deleted })
